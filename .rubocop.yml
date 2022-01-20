@@ -24,9 +24,13 @@ Style/Documentation:
 
 Metrics/AbcSize:
   Enabled: yes
+  Exclude:
+    - 'db/migrate/20220120041607_devise_token_auth_create_users.rb'
 
 Metrics/MethodLength:
   Enabled: yes
+  Exclude:
+    - 'db/migrate/20220120041607_devise_token_auth_create_users.rb'
 
 Metrics/CyclomaticComplexity:
   Enabled: yes
