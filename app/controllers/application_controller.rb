@@ -2,6 +2,8 @@
 
 # Base class for all controllers
 class ApplicationController < ActionController::Base
+  protect_from_forgery unless: -> { request.format.json? }
+  include DeviseTokenAuth::Concerns::SetUserByToken
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   private
