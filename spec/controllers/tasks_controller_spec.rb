@@ -3,6 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
+  let(:user) { FactoryBot.create :user }
+  let(:auth_headers) { user.create_new_auth_token }
+  let(:headers) do
+    {
+      'CONTENT_TYPE' => 'application/json',
+      'ACCEPT' => 'application/json',
+      'Uid' => auth_headers['uid'],
+      'Access-Token' => auth_headers['access-token'],
+      'Client' => auth_headers['client']
+    }
+  end
+
   describe 'GET #index' do
     let!(:project1) { create(:project) }
     let!(:project2) { create(:project) }
@@ -25,6 +37,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it 'returns all tasks for project' do
+      request.headers.merge! headers
       get :index, params: { project_id: project1.id }
 
       expect(response).to be_ok
@@ -58,6 +71,7 @@ RSpec.describe TasksController, type: :controller do
 
       it 'returns task json' do
         freeze_time do
+          request.headers.merge! headers
           post :create, params: params
 
           expect(response).to be_ok
@@ -68,6 +82,7 @@ RSpec.describe TasksController, type: :controller do
 
     context 'when error occurred' do
       it 'returns errors' do
+        request.headers.merge! headers
         post :create, params: { project_id: project.id }
 
         expect(response.status).to eq(422)
@@ -98,6 +113,8 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it 'when returns task json' do
+        request.headers.merge! headers
+
         get :show, params: { project_id: task.project_id, id: task.id }
 
         expect(response).to be_ok
@@ -109,6 +126,7 @@ RSpec.describe TasksController, type: :controller do
       let!(:project) { create(:project) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { project_id: project.id, id: 1 }
 
         expect(response).to be_not_found
@@ -123,6 +141,8 @@ RSpec.describe TasksController, type: :controller do
       let!(:task2) { create(:task, project: project2) }
 
       it 'returns 404' do
+        request.headers.merge! headers
+        
         get :show, params: { project_id: project1.id, id: project2.id }
 
         expect(response).to be_not_found
@@ -161,6 +181,7 @@ RSpec.describe TasksController, type: :controller do
 
         it 'returns task json' do
           freeze_time do
+            request.headers.merge! headers
             patch :update, params: params
 
             expect(response).to be_ok
@@ -179,6 +200,7 @@ RSpec.describe TasksController, type: :controller do
         end
 
         it 'returns errors' do
+          request.headers.merge! headers
           patch :update, params: params
 
           expect(response.status).to eq(422)
@@ -198,6 +220,7 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it 'returns 404' do
+        request.headers.merge! headers
         patch :update, params: params
 
         expect(response).to be_not_found
@@ -219,6 +242,7 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it 'returns 404' do
+        request.headers.merge! headers
         patch :update, params: params
 
         expect(response).to be_not_found
@@ -232,6 +256,7 @@ RSpec.describe TasksController, type: :controller do
       let(:task) { create(:task) }
 
       it 'returns 200' do
+        request.headers.merge! headers
         delete :destroy, params: { project_id: task.project_id, id: task.id }
         expect(response).to be_ok
       end
@@ -241,6 +266,7 @@ RSpec.describe TasksController, type: :controller do
       let!(:project) { create(:project) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         delete :destroy, params: { project_id: project.id, id: 1 }
 
         expect(response).to be_not_found
@@ -255,6 +281,7 @@ RSpec.describe TasksController, type: :controller do
       let!(:task2) { create(:task, project: project2) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         delete :destroy, params: { project_id: project1.id, id: task2.id }
 
         expect(response).to be_not_found

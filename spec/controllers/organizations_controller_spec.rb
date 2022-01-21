@@ -3,6 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
+  let(:user) { FactoryBot.create :user }
+  let(:auth_headers) { user.create_new_auth_token }
+  let(:headers) do
+    {
+      'CONTENT_TYPE' => 'application/json',
+      'ACCEPT' => 'application/json',
+      'Uid' => auth_headers['uid'],
+      'Access-Token' => auth_headers['access-token'],
+      'Client' => auth_headers['client']
+    }
+  end
+
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }
@@ -20,6 +32,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'returns organization json' do
+        request.headers.merge! headers
         get :show, params: { id: organization.id }
 
         expect(response).to be_ok
@@ -29,6 +42,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when organization does not exist' do
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { id: 1 }
 
         expect(response).to be_not_found
