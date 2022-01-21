@@ -20,6 +20,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'returns organization json' do
+        request.headers.merge! headers
         get :show, params: { id: organization.id }
 
         expect(response).to be_ok
@@ -29,6 +30,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when organization does not exist' do
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { id: 1 }
 
         expect(response).to be_not_found

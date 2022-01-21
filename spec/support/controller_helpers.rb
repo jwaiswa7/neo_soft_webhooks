@@ -9,4 +9,5 @@ end
 RSpec.configure do |config|
   config.include ControllerTestHelpers, type: :controller
   config.include ActiveSupport::Testing::TimeHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
 end

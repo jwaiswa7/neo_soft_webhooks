@@ -24,6 +24,7 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     it 'returns all projects for organization' do
+      request.headers.merge! headers
       get :index, params: { organization_id: organization1.id }
 
       expect(response).to be_ok
@@ -52,6 +53,7 @@ RSpec.describe ProjectsController, type: :controller do
     context 'when successfully created' do
       it 'returns project json' do
         freeze_time do
+          request.headers.merge! headers
           post :create, params: { organization_id: organization.id, name: 'Test Name' }
 
           expect(response).to be_ok
@@ -62,6 +64,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     context 'when error occurred' do
       it 'returns errors' do
+        request.headers.merge! headers
         post :create, params: { organization_id: organization.id }
 
         expect(response.status).to eq(422)
@@ -90,6 +93,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
 
       it 'returns project json' do
+        request.headers.merge! headers
         get :show, params: params
 
         expect(response).to be_ok
@@ -101,6 +105,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { organization_id: organization.id, id: 1 }
 
         expect(response).to be_not_found
@@ -115,6 +120,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project2) { create(:project, organization: organization2) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { organization_id: organization1.id, id: project2.id }
 
         expect(response).to be_not_found
@@ -152,6 +158,7 @@ RSpec.describe ProjectsController, type: :controller do
 
         it 'returns project json' do
           freeze_time do
+            request.headers.merge! headers
             patch :update, params: params
 
             expect(response).to be_ok
@@ -162,6 +169,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'when error occurred' do
         it 'returns errors' do
+          request.headers.merge! headers
           patch :update, params: {
             organization_id: project.organization_id,
             id: project.id,
@@ -178,6 +186,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         patch :update, params: {
           organization_id: organization.id,
           id: 1,
@@ -196,6 +205,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project2) { create(:project, organization: organization2) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         patch :update, params: {
           organization_id: organization1.id,
           id: project2.id,
@@ -213,6 +223,7 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { create(:project) }
 
       it 'returns 200' do
+        request.headers.merge! headers
         delete :destroy, params: { organization_id: project.organization_id, id: project.id }
         expect(response).to be_ok
       end
@@ -222,6 +233,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization) { create(:organization) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         delete :destroy, params: { organization_id: organization.id, id: 1 }
 
         expect(response).to be_not_found
@@ -236,6 +248,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project2) { create(:project, organization: organization2) }
 
       it 'returns 404' do
+        request.headers.merge! headers
         delete :destroy, params: { organization_id: organization1.id, id: project2.id }
 
         expect(response).to be_not_found
