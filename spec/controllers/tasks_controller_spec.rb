@@ -3,18 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  let(:user) { FactoryBot.create :user }
-  let(:auth_headers) { user.create_new_auth_token }
-  let(:headers) do
-    {
-      'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json',
-      'Uid' => auth_headers['uid'],
-      'Access-Token' => auth_headers['access-token'],
-      'Client' => auth_headers['client']
-    }
-  end
-
   describe 'GET #index' do
     let!(:project1) { create(:project) }
     let!(:project2) { create(:project) }
@@ -142,7 +130,7 @@ RSpec.describe TasksController, type: :controller do
 
       it 'returns 404' do
         request.headers.merge! headers
-        
+
         get :show, params: { project_id: project1.id, id: project2.id }
 
         expect(response).to be_not_found

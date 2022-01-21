@@ -3,18 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe ProjectsController, type: :controller do
-  let(:user) { FactoryBot.create :user }
-  let(:auth_headers) { user.create_new_auth_token }
-  let(:headers) do
-    {
-      'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json',
-      'Uid' => auth_headers['uid'],
-      'Access-Token' => auth_headers['access-token'],
-      'Client' => auth_headers['client']
-    }
-  end
-
   describe 'GET #index' do
     let!(:organization1) { create(:organization) }
     let!(:organization2) { create(:organization) }

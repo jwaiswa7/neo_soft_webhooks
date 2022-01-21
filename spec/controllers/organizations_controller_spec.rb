@@ -3,18 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
-  let(:user) { FactoryBot.create :user }
-  let(:auth_headers) { user.create_new_auth_token }
-  let(:headers) do
-    {
-      'CONTENT_TYPE' => 'application/json',
-      'ACCEPT' => 'application/json',
-      'Uid' => auth_headers['uid'],
-      'Access-Token' => auth_headers['access-token'],
-      'Client' => auth_headers['client']
-    }
-  end
-
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }
