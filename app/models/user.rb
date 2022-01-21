@@ -10,5 +10,5 @@ class User < ApplicationRecord
   has_many :user_organizations, dependent: :destroy
   has_many :organizations, through: :user_organizations
 
-  validates :email, presence: true
+  validates :email, :password, presence: true
 end
