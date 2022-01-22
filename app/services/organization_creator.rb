@@ -11,9 +11,9 @@ class OrganizationCreator
     organization = Organization.new(name: @organization_name)
     if organization.save
       UserOrganization.new(user: @user, organization: organization)
-      {status: true, organization: organization}
+      { status: true, organization: organization }
     else
-        {status: false, errors: organization.errors.full_messages }
+      { status: false, errors: organization.errors.full_messages }
     end
   end
 end

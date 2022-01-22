@@ -8,10 +8,10 @@ class OrganizationsController < ApplicationController
       user_id: current_user.id,
       organization_name: organization_params[:name]
     ).call
-    
+
     if organization_create[:status]
-     render json: OrganizationSerializer.new(organization_create[:organization]).serializable_hash
-    else 
+      render json: OrganizationSerializer.new(organization_create[:organization]).serializable_hash
+    else
       render json: { errors: organization_create[:errors] }, status: :unprocessable_entity
     end
   end
