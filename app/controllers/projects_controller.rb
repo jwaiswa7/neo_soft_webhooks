@@ -3,48 +3,51 @@
 # Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_organization
-  before_action :find_project, only: %i[show update destroy]
+  before_action :initialize_project_service
 
   def index
-    render json: ProjectSerializer.new(@organization.projects).serializable_hash
+    projects = @project_service.projects
+
+    render json: ProjectSerializer.new(projects).serializable_hash
   end
 
   def create
-    @project = @organization.projects.build(project_params)
+    create_project = @project_service.create_project(name: project_params[:name])
 
-    if @project.save
-      render json: ProjectSerializer.new(@project).serializable_hash
+    if create_project[:status]
+      render json: ProjectSerializer.new(create_project[:project]).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: create_project[:errors] }, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: ProjectSerializer.new(@project).serializable_hash
+    project = @project_service.project(project_id: params[:id])
+
+    render json: ProjectSerializer.new(project).serializable_hash
   end
 
   def update
-    if @project.update(project_params)
-      render json: ProjectSerializer.new(@project).serializable_hash
+    updated_project = @project_service.update(project_id: params[:id], name: project_params[:name])
+
+    if updated_project[:status]
+      render json: ProjectSerializer.new(updated_project[:project]).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: updated_project[:errors] }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @project.destroy
+    @project_service.destroy(project_id: params[:id])
     head :ok
   end
 
   private
 
-  def find_organization
-    @organization = Organization.find(params[:organization_id])
-  end
-
-  def find_project
-    @project = @organization.projects.find(params[:id])
+  def initialize_project_service
+    @project_service = ProjectService.new(
+      organization_id: params[:organization_id]
+    )
   end
 
   def project_params
