@@ -22,13 +22,13 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    project = @project_service.project(project_id: params[:id])
+    project = @project_service.project(id: params[:id])
 
     render json: ProjectSerializer.new(project).serializable_hash
   end
 
   def update
-    updated_project = @project_service.update(project_id: params[:id], name: project_params[:name])
+    updated_project = @project_service.update(id: params[:id], name: project_params[:name])
 
     if updated_project[:status]
       render json: ProjectSerializer.new(updated_project[:project]).serializable_hash
@@ -38,7 +38,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project_service.destroy(project_id: params[:id])
+    @project_service.destroy(id: params[:id])
     head :ok
   end
 

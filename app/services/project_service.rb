@@ -6,8 +6,8 @@ class ProjectService
     @organization = Organization.find(organization_id)
   end
 
-  def project(project_id:)
-    def_project(project_id: project_id)
+  def project(id:)
+    def_project(id: id)
   end
 
   def projects
@@ -22,21 +22,21 @@ class ProjectService
     { status: false, errors: project.errors.full_messages }
   end
 
-  def update(project_id:, name:)
-    project = def_project(project_id: project_id)
+  def update(id:, name:)
+    project = def_project(id: id)
 
     return { status: true, project: project } if project.update(name: name)
 
     { status: false, errors: project.errors.full_messages }
   end
 
-  def destroy(project_id:)
-    def_project(project_id: project_id).destroy
+  def destroy(id:)
+    def_project(id: id).destroy
   end
 
   private
 
-  def def_project(project_id:)
-    @organization.projects.find(project_id)
+  def def_project(id:)
+    @organization.projects.find(id)
   end
 end
