@@ -3,41 +3,52 @@
 # Exposes API for interacting with Tasks.
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_project
-  before_action :find_task, only: %i[show update destroy]
+  before_action :initialize_task_service
 
   def index
-    render json: TaskSerializer.new(@project.tasks).serializable_hash
+    render json: TaskSerializer.new(@task_service.tasks).serializable_hash
   end
 
   def create
-    @task = @project.tasks.build(task_params)
+    create_task = @task_service.create_task(
+      params: task_params
+    )
 
-    if @task.save
-      render json: TaskSerializer.new(@task).serializable_hash
+    if create_task[:status]
+      render json: TaskSerializer.new(create_task[:task]).serializable_hash
     else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: create_task[:errors] }, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: TaskSerializer.new(@task).serializable_hash
+    task = @task_service.task(id: params[:id])
+
+    render json: TaskSerializer.new(task).serializable_hash
   end
 
   def update
-    if @task.update(task_params)
-      render json: TaskSerializer.new(@task).serializable_hash
+    updated_task = @task_service.update(id: params[:id], params: task_params)
+
+    if updated_task[:status]
+      render json: TaskSerializer.new(updated_task[:task]).serializable_hash
     else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: updated_task[:errors] }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @task.destroy
+    @task_service.destroy(id: params[:id])
     head :ok
   end
 
   private
+
+  def initialize_task_service
+    @task_service = TaskService.new(
+      project_id: params[:project_id]
+    )
+  end
 
   def find_project
     @project = Project.find(params[:project_id])
