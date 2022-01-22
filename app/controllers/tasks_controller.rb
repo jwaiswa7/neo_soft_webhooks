@@ -5,7 +5,6 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :initialize_task_service
 
-
   def index
     render json: TaskSerializer.new(@task_service.tasks).serializable_hash
   end
