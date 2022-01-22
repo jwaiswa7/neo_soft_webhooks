@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
   get '/account', to: 'users#show'
-  resources :organizations, only: %i[show] do
+  resources :organizations, only: %i[create show] do
     resources :projects, only: %i[index create show update destroy]
   end
 
