@@ -13,7 +13,9 @@ RSpec.describe OrganizationsController, type: :controller do
     it 'fails without an organization name' do
       request.headers.merge! headers
       post :create, params: { organization: { name: '' } }
-      expect(response).to be_a_bad_request
+      
+      expect(response.status).to eq(422)
+      expect(json_response).to eq(errors: ["Name can't be blank"])
     end
   end
 
