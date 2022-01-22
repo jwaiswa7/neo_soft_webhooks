@@ -4,13 +4,13 @@
 class OrganizationsController < ApplicationController
   before_action :authenticate_user!
   def create
-    @organization = Organization.new(organization_params)
-    if @organization.save
-      UserOrganization.new(user: current_user, organization: @organization)
-      render json: OrganizationSerializer.new(@organization).serializable_hash
-    else
-      render json: @organization.errors
-    end
+    organization = OrganizationCreator.new(
+      user_id: current_user.id,
+      organization_name: organization_params[:name]
+    ).call
+    render json: OrganizationSerializer.new(organization).serializable_hash
+  rescue StandardError => e
+    render json: e, status: :bad_request
   end
 
   def show

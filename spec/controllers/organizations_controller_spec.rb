@@ -9,6 +9,12 @@ RSpec.describe OrganizationsController, type: :controller do
       post :create, params: { organization: { name: Faker::Company.name } }
       expect(response).to be_ok
     end
+
+    it 'fails without an organization name' do
+      request.headers.merge! headers
+      post :create, params: { organization: { name: '' } }
+      expect(response).to be_a_bad_request
+    end
   end
 
   describe 'GET #show' do
