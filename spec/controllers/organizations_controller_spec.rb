@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
+  describe 'POST #create' do
+    it 'creates an organization' do
+      request.headers.merge! headers
+      post :create, params: { organization: { name: Faker::Company.name } }
+      expect(response).to be_ok
+    end
+  end
+
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }
