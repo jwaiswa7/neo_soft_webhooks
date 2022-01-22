@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    create_project = @project_service.create_project(name: project_params[:name])
+    create_project = @project_service.create_project(params: project_params)
 
     if create_project[:status]
       render json: ProjectSerializer.new(create_project[:project]).serializable_hash
@@ -28,7 +28,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    updated_project = @project_service.update(id: params[:id], name: project_params[:name])
+    updated_project = @project_service.update(id: params[:id], params: project_params)
 
     if updated_project[:status]
       render json: ProjectSerializer.new(updated_project[:project]).serializable_hash

@@ -14,18 +14,18 @@ class ProjectService
     @organization.projects
   end
 
-  def create_project(name:)
-    project = @organization.projects.build(name: name)
+  def create_project(params:)
+    project = @organization.projects.build(params)
 
     return { status: true, project: project } if project.save
 
     { status: false, errors: project.errors.full_messages }
   end
 
-  def update(id:, name:)
+  def update(id:, params:)
     project = def_project(id: id)
 
-    return { status: true, project: project } if project.update(name: name)
+    return { status: true, project: project } if project.update(params)
 
     { status: false, errors: project.errors.full_messages }
   end

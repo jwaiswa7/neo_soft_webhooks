@@ -14,18 +14,18 @@ class TaskService
     @project.tasks
   end
 
-  def create_task(name:, description:)
-    task = @project.tasks.build(name: name, description: description)
+  def create_task(params:)
+    task = @project.tasks.build(params)
 
     return { status: true, task: task } if task.save
 
     { status: false, errors: task.errors.full_messages }
   end
 
-  def update(id:, name:, description:)
+  def update(id:, params:)
     task = def_task(id: id)
 
-    return { status: true, task: task } if task.update(name: name, description: description)
+    return { status: true, task: task } if task.update(params)
 
     { status: false, errors: task.errors.full_messages }
   end
