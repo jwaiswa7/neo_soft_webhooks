@@ -51,4 +51,4 @@ You're good to go. Happy coding 🤘!
 
 ## Documentation
 
-Please see the documentation here ![](documentation.pdf)
+Please see the documentation [here](documentation.pdf)
