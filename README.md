@@ -48,3 +48,7 @@ bundle exec rspec
 You're good to go. Happy coding 🤘!
 
 ![](happy-coding.gif)
+
+## Documentation
+
+Please see the documentation [here](documentation.pdf)

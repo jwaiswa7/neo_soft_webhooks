@@ -3,6 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
+  describe 'POST #create' do
+    it 'creates an organization' do
+      request.headers.merge! headers
+      post :create, params: { organization: { name: Faker::Company.name } }
+      expect(response).to be_ok
+    end
+
+    it 'fails without an organization name' do
+      request.headers.merge! headers
+      post :create, params: { organization: { name: '' } }
+
+      expect(response.status).to eq(422)
+      expect(json_response).to eq(errors: ["Name can't be blank"])
+    end
+  end
+
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }
@@ -20,6 +36,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'returns organization json' do
+        request.headers.merge! headers
         get :show, params: { id: organization.id }
 
         expect(response).to be_ok
@@ -29,6 +46,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when organization does not exist' do
       it 'returns 404' do
+        request.headers.merge! headers
         get :show, params: { id: 1 }
 
         expect(response).to be_not_found
